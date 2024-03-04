@@ -53,8 +53,7 @@ public class User {
     @Size(groups = {CreateUser.class, UpdateUser.class}, min = 8, max = 60)
     private String password;
 
-    @OneToMany(mappedBy = "user") //um usuário pode ter várias classes
-    // qual variavel mapeia de quem que é a task no model Task? a variavel us3r
+    @OneToMany(mappedBy = "user") //um usuário pode ter várias classes -- qual variavel mapeia de quem que é a task no model Task? a variavel us3r
     private List<Task> tasks = new ArrayList<Task> ();
 
     public User() {
