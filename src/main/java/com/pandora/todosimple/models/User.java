@@ -5,12 +5,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.lang.Override;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -41,7 +44,7 @@ public class User {
     @NotEmpty(groups = CreateUser.class) //n pode ser uma string vazia "" no CU
     @Size(groups = CreateUser.class, min = 2, max = 100)
     private String username;
-    // não é aconselhavel deizar atualizar o identificador de usuario, portanto, na hora de atualizar o usuário é permitido que username seja nulo
+    // não é aconselhavel deixar atualizar o identificador de usuario, portanto, na hora de atualizar o usuário é permitido que username seja nulo
 
     @JsonProperty(access = Access.WRITE_ONLY) // isso garante que a senhe não é retornada pro cliente da API
     @Column(name="password", length = 60, nullable = false)
@@ -50,7 +53,9 @@ public class User {
     @Size(groups = {CreateUser.class, UpdateUser.class}, min = 8, max = 60)
     private String password;
 
-    // private List<Task> tasks = new ArrayList<Task> ();
+    @OneToMany(mappedBy = "user") //um usuário pode ter várias classes
+    // qual variavel mapeia de quem que é a task no model Task? a variavel us3r
+    private List<Task> tasks = new ArrayList<Task> ();
 
     public User() {
         // isso é um construtor vazio
@@ -93,9 +98,17 @@ public class User {
         this.password = password;
     }
 
+    public List<Task> getTask(){
+        return this.tasks;
+    }
+
+    public void setTasks(List<Task> tasks){
+        this.tasks = tasks;
+    }
+
     // hashCode and Equals: verificação do Objeto para validação dos dados
 
-    @Override
+    @Override //anotação que indica que esse método esta substituindo um método da superclasse (qual a super classe nesse exemplo?)
     public boolean equals(Object obj) {
         if (obj == this)
             return true;
@@ -119,6 +132,5 @@ public class User {
         result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
         return result;
     }
-
 
 }
